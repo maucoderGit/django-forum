@@ -1,1 +1,21 @@
 {% extends 'base.html' %}
+
+{% block content %}
+    <h2>{{post.title}}</h2>
+    <p>{{post.content}}</p>
+    <!-- LIKES -->
+    {% if user.is_authenticated %}
+        <form action="{% url 'posts:vote_up' object.id %}" method="POST">
+        {% csrf_token %}
+
+        {% if post_is_liked %}
+            <button type="submit" name="post_id" value="{{object.id}}" class="btn btn-info">Unlike</button>
+        {% else %}
+            <button type="submit" name="post_id" value="{{object.id}}" class="btn btn-info">Like</button>
+        {% endif %}
+        </form>
+    {% else %}
+        <a href="{% url 'users:login' %}?next={{request.path}}">Log in to like this article!</a><br>
+    {% endif %}
+        <strong>{{ number_of_likes }} Like{{ number_of_likes|pluralize }}</strong>
+{% endblock %}
