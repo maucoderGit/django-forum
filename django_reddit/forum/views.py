@@ -69,7 +69,7 @@ class PostDetail(LoginRequiredMixin, DetailView):
             liked = True
         data['number_of_likes'] = likes_connected.number_of_votes()
         data['post_is_liked'] = liked
-        data['comments'] = CommentPost.objects.all()
+        data['comments'] = CommentPost.objects.filter(post__pk=likes_connected.pk)
         return data
 
 
