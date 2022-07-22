@@ -1,18 +1,50 @@
 """Views file"""
 # Django
 from django.shortcuts import get_object_or_404
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 # Python
 # Local
-from .models import Post
+from .forms import PostForm, CommentForm
+from .models import CommentPost, Post
 
 # Views
 
-class Feed(ListView):
+class CreateCommentView(LoginRequiredMixin, CreateView):
+    """Create a new Post.
+
+    This view creates posts if the user is logged.
+    """
+
+    template_name: str = 'forum/new_comment.html'
+    form_class = CommentForm
+    success_url = reverse_lazy('posts:feed')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['post'] = Post.objects.get(pk=self.kwargs['pk'])
+        context['profile'] = self.request.user.profile
+        return context
+
+
+class CreatePostView(LoginRequiredMixin, CreateView):
+    """Create posts."""
+    template_name: str = 'forum/new_post.html'
+    form_class = PostForm
+    success_url = reverse_lazy('posts:feed')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        context['profile'] = self.request.user.profile
+        return context
+
+
+class Feed(LoginRequiredMixin, ListView):
     """View to display all posts."""
     model = Post
     template_name: str = 'forum/feed.html'
@@ -23,7 +55,7 @@ class Feed(ListView):
         return Post.objects.filter(created__lte=timezone.now()).order_by('-created')
 
 
-class PostDetail(DetailView):
+class PostDetail(LoginRequiredMixin, DetailView):
     """View to display details from a post."""
     model = Post
     template_name: str = 'forum/detail_post.html'
@@ -37,6 +69,7 @@ class PostDetail(DetailView):
             liked = True
         data['number_of_likes'] = likes_connected.number_of_votes()
         data['post_is_liked'] = liked
+        data['comments'] = CommentPost.objects.all()
         return data
 
 
@@ -52,4 +85,4 @@ def PostVoteUp(request, pk):
     else:
         post.vote_up.add(request.user)
 
-    return HttpResponseRedirect(reverse('posts:detail', args=[str(pk)]))
+    return HttpResponseRedirect(reverse('posts:detail', kwargs={'pk':pk}))

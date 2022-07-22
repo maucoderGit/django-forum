@@ -1,0 +1,28 @@
+{% extends 'users/base.html' %}
+
+{% block head_content %}
+<title>Sign up</title>
+{% endblock %}
+
+{% block container %}
+<div class="container-sm">
+    <div class="row">
+        <div class="col">
+            <div class="text-end">
+                <img src="https://cdn-icons.flaticon.com/png/512/3405/premium/3405554.png?token=exp=1658515947~hmac=58fbcee9c68eeec0e6f21d0d99b9605b" width="48" alt="ux icons">
+            </div>
+            <h2 class="fw-bold text-center py-5">Sign up.</h2>
+
+            <!-- Login -->
+            <form action="{% url 'users:signup' %}" method='POST'>
+                {% csrf_token %}
+        
+                {{ form.as_p }}
+        
+                <button class="btn btn-primary btn-block mt-5" type="submit">Register</button>
+            </form>
+        </div>
+    </div>
+</div>
+    
+{% endblock %}

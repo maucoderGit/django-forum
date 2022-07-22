@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block head_content %}
+<title>Create new comment</title>
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-6 pt-3 pb-3" id="profile-box">
+                <h4 class="mb-4">Comment post</h4>
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <input type="hidden" name="profile" value="{{ profile.pk }}" />
+                    <input type="hidden" name="post" value="{{ post.pk }}">
+                    {# Content field #}
+                    <div class="form-group">
+                        <textarea class="form-control" name="content" id="exampleFormControlTextarea1" rows="3" placeholder="Post content"></textarea>
+                        <div class="invalid-feedback">
+                            {% for error in form.title.errors %}{{ error }}{% endfor %}
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

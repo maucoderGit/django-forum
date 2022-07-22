@@ -1,0 +1,39 @@
+{% extends 'users/base.html' %}
+
+{% block head_content %}
+    <title>Login</title>
+{% endblock %}
+
+{% block container %}
+    <div class="container-sm">
+        <div class="row">
+            <div class="col">
+                <div class="text-end">
+                    <img src="https://cdn-icons.flaticon.com/png/512/3405/premium/3405554.png?token=exp=1658515947~hmac=58fbcee9c68eeec0e6f21d0d99b9605b" width="48" alt="ux icons">
+                </div>
+                <h2 class="fw-bold text-center py-5">Login!</h2>
+    
+                <!-- Login -->
+                <form method="POST" action='{% url 'users:login' %}'>
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username">
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password">
+                    </div>
+    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Log in</button>
+                    </div>
+    
+                    <div class="my-3">
+                        <span>Don't have an account yet? <a href="{% url 'users:signup' %}">Sign Up</a></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,21 +1,48 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>{{post.title}}</h2>
-    <p>{{post.content}}</p>
-    <!-- LIKES -->
-    {% if user.is_authenticated %}
-        <form action="{% url 'posts:vote_up' object.id %}" method="POST">
-        {% csrf_token %}
+    <div class="card text-center">
+        <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+            <a class="nav-link active" aria-current="true" href="#">Active</a>
+            </li>
+            <li class="nav-item">
+                <!-- LIKES -->
+                {% if user.is_authenticated %}
+                    <form action="{% url 'posts:vote_up' object.id %}" method="POST">
+                {% csrf_token %}
 
-        {% if post_is_liked %}
-            <button type="submit" name="post_id" value="{{object.id}}" class="btn btn-info">Unlike</button>
-        {% else %}
-            <button type="submit" name="post_id" value="{{object.id}}" class="btn btn-info">Like</button>
-        {% endif %}
-        </form>
-    {% else %}
-        <a href="{% url 'users:login' %}?next={{request.path}}">Log in to like this article!</a><br>
-    {% endif %}
-        <strong>{{ number_of_likes }} Like{{ number_of_likes|pluralize }}</strong>
+                {% if post_is_liked %}
+                    <button type="submit" name="post_id" value="{{object.id}}" class="nav-link active">Unlike</button>
+                {% else %}
+                    <button type="submit" name="post_id" value="{{object.id}}" class="nav-link active">Like</button>
+                {% endif %}
+                </form>
+                {% else %}
+                    <a href="{% url 'users:login' %}?next={{request.path}}">Log in to like this article!</a><br>
+                {% endif %}
+                    <strong>{{ number_of_likes }} Like{{ number_of_likes|pluralize }}</strong>
+            </li>
+        </ul>
+        </div>
+        <div class="card-body">
+        <h5 class="card-title">{{post.title}}</h5>
+        <p class="card-text">{{post.content}}</p>
+        <a href="{% url 'posts:comment' post.pk %}" class="btn btn-primary">Comment</a>
+        </div>
+    </div>
+    <ul class="nav nav-tabs card-header-tabs">
+        <li class="nav-item">
+        </div>
+        {% for comment in comments  %}
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">{{comment.user}}</h5>
+                <p class="card-text">{{comment.content}}</p>
+            </div>
+        </div>
+        {% endfor %}
+        </li>
+    </ul>
 {% endblock %}

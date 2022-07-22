@@ -4,7 +4,7 @@
 from typing import List
 from django.contrib import admin
 # Models.
-from .models import Post
+from .models import CommentPost, Post
 
 # Register your models here.
 
@@ -44,3 +44,5 @@ class PostAdmin(admin.ModelAdmin):
         'created',
         'updated',
     )
+
+admin.site.register(CommentPost)
