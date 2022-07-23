@@ -140,9 +140,9 @@ STATOC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_URL = 'static/'
 LOGIN_URL = 'users:login'
 
-STATICFILES_DIRS = {
-    os.path.join(BASE_DIR, 'static')
-}
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 LOGIN_REDIRECT_URL = 'posts:feed'
 LOGOUT_REDIRECT_URL = LOGIN_URL
